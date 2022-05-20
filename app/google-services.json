@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "788475928809",
+    "project_id": "moshimoshi-16e22",
+    "storage_bucket": "moshimoshi-16e22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788475928809:android:c0bf1b8df3cfed93f01078",
+        "android_client_info": {
+          "package_name": "xyz.moshimoshi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "788475928809-drjehhq1havm8skhaqs09d94mf5uk93f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFDDWWFaGwa-2Zg_KlvZjaNT-r_BoHe1Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "788475928809-drjehhq1havm8skhaqs09d94mf5uk93f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788475928809:android:17c54141d84a150cf01078",
+        "android_client_info": {
+          "package_name": "xyz.moshimoshi.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "788475928809-drjehhq1havm8skhaqs09d94mf5uk93f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFDDWWFaGwa-2Zg_KlvZjaNT-r_BoHe1Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "788475928809-drjehhq1havm8skhaqs09d94mf5uk93f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MoshiMoshi</string>
+    <string name="preference">xyz.moshimoshi.preference</string>
+    <string name="home_nav">Home</string>
+    <string name="enter_token">Enter your token to continue!</string>
+    <string name="token">Token</string>
+    <string name="login">Login!</string>
+</resources>
