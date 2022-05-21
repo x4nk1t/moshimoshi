@@ -11,8 +11,6 @@ import xyz.moshimoshi.R
 class HomeFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().title = "Home"
-
         setHasOptionsMenu(true)
     }
 

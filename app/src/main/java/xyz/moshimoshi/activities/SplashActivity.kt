@@ -14,6 +14,8 @@ class SplashActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_splash)
 
+        window.statusBarColor = getColor(R.color.black)
+
         val thread = Thread {
             Thread.sleep(2000)
 
