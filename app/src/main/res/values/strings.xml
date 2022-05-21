@@ -5,4 +5,6 @@
     <string name="enter_token">Enter your token to continue!</string>
     <string name="token">Token</string>
     <string name="login">Login!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>
