@@ -37,22 +37,16 @@ class LoginActivity : BaseActivity() {
         val instance = Firebase.auth
 
         instance.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener(this) { task ->
-                val user = task.user
-
-                if(user == null){
-                    Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show()
-                } else {
+            .addOnCompleteListener(this) { task ->
+                if(task.isSuccessful){
                     Toast.makeText(this, "Login Success!", Toast.LENGTH_SHORT).show()
-                    Toast.makeText(this, "Email: "+ user.email, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
 
-                    startActivity(intent)
+                    val mainIntent = Intent(this, MainActivity::class.java)
+                    startActivity(mainIntent)
                     finish()
+                } else {
+                    Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show()
                 }
-            }
-            .addOnFailureListener {
-                throw it
             }
     }
 }
