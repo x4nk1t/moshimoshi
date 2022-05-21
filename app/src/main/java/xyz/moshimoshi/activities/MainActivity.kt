@@ -22,31 +22,21 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
 
         sharedPrefs = getSharedPreferences(getString(R.string.preference), MODE_PRIVATE)
 
-        registerAllEvents()
-
         drawer = findViewById(R.id.drawer)
 
         val toolbar: Toolbar = initToolbar(R.id.toolbar)
         val nav: NavigationView = findViewById(R.id.nav)
 
-        val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.preference), MODE_PRIVATE)
-        val token = sharedPref.getString("authToken", null)
+        initToolbar(R.id.toolbar)
 
-        if(token == null) {
-            val loginIntent = Intent(this, LoginActivity::class.java)
-            startActivity(loginIntent)
-        } else {
-            initToolbar(R.id.toolbar)
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        nav.setNavigationItemSelectedListener(this)
 
-            val toggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
-            drawer.addDrawerListener(toggle)
-            toggle.syncState()
-            nav.setNavigationItemSelectedListener(this)
+        nav.setCheckedItem(R.id.home)
 
-            nav.setCheckedItem(R.id.home)
-
-            supportFragmentManager.beginTransaction().replace(R.id.main_fragment, HomeFragment()).commit()
-        }
+        supportFragmentManager.beginTransaction().replace(R.id.main_fragment, HomeFragment()).commit()
     }
 
     override fun onBackPressed() {
@@ -67,9 +57,5 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    private fun registerAllEvents(){
-        //Toast.makeText(this, "Message received!", Toast.LENGTH_SHORT).show()
     }
 }
