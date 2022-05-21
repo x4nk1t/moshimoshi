@@ -67,6 +67,13 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
                 transaction.replace(R.id.main_fragment, HomeFragment())
                 transaction.commit()
             }
+            R.id.logout -> {
+                Firebase.auth.signOut()
+                Toast.makeText(this, "Logged out!", Toast.LENGTH_SHORT).show()
+                val loginIntent = Intent(this, LoginActivity::class.java)
+                startActivity(loginIntent)
+                finish()
+            }
         }
         drawer.closeDrawer(GravityCompat.START)
         return true

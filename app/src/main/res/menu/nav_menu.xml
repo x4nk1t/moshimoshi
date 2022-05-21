@@ -5,5 +5,9 @@
         <item android:id="@+id/home"
             android:title="@string/home_nav"
             android:icon="@drawable/ic_home_black_24dp"/>
+
+        <item android:id="@+id/logout"
+            android:title="@string/logout"
+            android:icon="@drawable/ic_baseline_exit_to_app_24"/>
     </group>
 </menu>
