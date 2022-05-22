@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -22,13 +23,16 @@ class LoginActivity : BaseActivity() {
 
         val email = emailBox.text.toString()
         val password = passwordBox.text.toString()
+        val loginStatus: TextView = findViewById(R.id.login_status)
 
         if(email == "" || password == ""){
-            Toast.makeText(this, "Please enter both email and password!", Toast.LENGTH_SHORT).show()
+            loginStatus.setTextColor(getColor(R.color.red))
+            loginStatus.text = "Please enter both email and password!"
             return
         }
 
-        Toast.makeText(this, "Logging in..", Toast.LENGTH_SHORT).show()
+        loginStatus.setTextColor(getColor(R.color.black))
+        loginStatus.text = "Logging in.."
 
         authenticateUser(email, password)
     }
@@ -45,7 +49,10 @@ class LoginActivity : BaseActivity() {
                     startActivity(mainIntent)
                     finish()
                 } else {
-                    Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show()
+                    val loginStatus: TextView = findViewById(R.id.login_status)
+
+                    loginStatus.text = "User not found!"
+                    loginStatus.setTextColor(getColor(R.color.red))
                 }
             }
     }

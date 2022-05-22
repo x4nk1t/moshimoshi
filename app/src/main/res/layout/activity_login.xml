@@ -8,6 +8,14 @@
     tools:context=".activities.LoginActivity" >
 
     <TextView
+        android:id="@+id/login_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:labelFor="@+id/input_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email" />
@@ -19,9 +27,11 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress" />
 
     <TextView
+        android:labelFor="@+id/input_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/password" />
@@ -33,13 +43,14 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:autofillHints="password" />
 
     <Button
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="loginPressed"
-        android:text="Login" />
+        android:text="@string/login" />
 
 </LinearLayout>
