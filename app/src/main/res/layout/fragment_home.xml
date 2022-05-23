@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <TextView
-        android:id="@+id/welcome_user"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

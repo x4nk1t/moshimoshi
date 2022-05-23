@@ -2,8 +2,6 @@ package xyz.moshimoshi.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import xyz.moshimoshi.R
