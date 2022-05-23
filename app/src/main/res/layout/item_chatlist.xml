@@ -10,7 +10,8 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/ic_person_outline_24"
-        android:layout_marginEnd="25dp" />
+        android:layout_marginEnd="25dp"
+        android:contentDescription="@string/person_outline" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,15 +24,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:layout_marginBottom="5dp"
-            android:text="Ankit Maharjan" />
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:id="@+id/lastMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="You: I cannot do this!" />
+            android:textSize="15sp" />
     </LinearLayout>
 
 </LinearLayout>

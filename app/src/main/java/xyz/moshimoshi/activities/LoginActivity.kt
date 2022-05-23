@@ -26,12 +26,12 @@ class LoginActivity : BaseActivity() {
 
         if(email == "" || password == ""){
             loginStatus.setTextColor(getColor(R.color.red))
-            loginStatus.text = "Please enter both email and password!"
+            loginStatus.text = getString(R.string.enter_both)
             return
         }
 
         loginStatus.setTextColor(getColor(R.color.black))
-        loginStatus.text = "Logging in.."
+        loginStatus.text = getString(R.string.logging_in)
 
         authenticateUser(email, password)
     }
@@ -50,7 +50,7 @@ class LoginActivity : BaseActivity() {
                 } else {
                     val loginStatus: TextView = findViewById(R.id.login_status)
 
-                    loginStatus.text = "User not found!"
+                    loginStatus.text = getString(R.string.user_not_found)
                     loginStatus.setTextColor(getColor(R.color.red))
                 }
             }

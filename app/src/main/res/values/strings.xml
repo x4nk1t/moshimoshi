@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">MoshiMoshi</string>
-    <string name="preference">xyz.moshimoshi.preference</string>
     <string name="home_nav">Home</string>
-    <string name="enter_token">Enter your token to continue!</string>
-    <string name="token">Token</string>
     <string name="login">Login!</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="logout">Logout</string>
     <string name="new_message">New Message</string>
+    <string name="person_outline">Person outline</string>
+    <string name="enter_both">Please enter both email and password!</string>
+    <string name="logging_in">Logging in..</string>
+    <string name="user_not_found">User not found!</string>
 </resources>
