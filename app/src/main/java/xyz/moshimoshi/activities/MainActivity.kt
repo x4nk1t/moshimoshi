@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -33,22 +34,7 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
             return
         }
 
-        sharedPrefs = getSharedPreferences(getString(R.string.preference), MODE_PRIVATE)
-
-        drawer = findViewById(R.id.drawer)
-
-        val toolbar: Toolbar = initToolbar(R.id.toolbar)
-        val nav: NavigationView = findViewById(R.id.nav)
-
         initToolbar(R.id.toolbar)
-
-        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
-        drawer.addDrawerListener(toggle)
-        toggle.syncState()
-        nav.setNavigationItemSelectedListener(this)
-
-        nav.setCheckedItem(R.id.home)
-
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, HomeFragment()).commit()
     }
 
@@ -77,5 +63,9 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun newMessagePressed(view: View){
+        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show()
     }
 }
