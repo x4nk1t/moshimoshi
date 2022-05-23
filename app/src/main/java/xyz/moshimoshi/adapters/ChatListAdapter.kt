@@ -21,13 +21,11 @@ class ChatListAdapter(private val context: Context, private val dataSet: ArrayLi
 
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
         val data = dataSet[position]
-        holder.chatName.text = data.chatId
-        holder.lastMessage.text = data.lastMessage
+        holder.chatId.text = data.chatId
+        holder.chatName.text = data.chatName
 
         holder.linearLayout.setOnClickListener {
-            val name: TextView = it.findViewById(R.id.chatName)
-
-            Toast.makeText(context, "Clicked name: "+ name.text.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Clicked name: "+ holder.chatId.text.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -40,5 +38,5 @@ class ChatListAdapter(private val context: Context, private val dataSet: ArrayLi
 class ChatListViewHolder(view: View): RecyclerView.ViewHolder(view){
     val linearLayout: LinearLayout = view.findViewById(R.id.chatLinearLayout)
     val chatName: TextView = view.findViewById(R.id.chatName)
-    val lastMessage: TextView = view.findViewById(R.id.lastMessage)
+    val chatId: TextView = view.findViewById(R.id.chatId)
 }
