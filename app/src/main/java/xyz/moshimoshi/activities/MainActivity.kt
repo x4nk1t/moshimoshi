@@ -1,22 +1,18 @@
 package xyz.moshimoshi.activities
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
 import xyz.moshimoshi.fragments.HomeFragment
 
-class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
-    lateinit var drawer: DrawerLayout
-    lateinit var sharedPrefs: SharedPreferences
+class MainActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +32,13 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, HomeFragment()).commit()
     }
 
-    override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.options_menu, menu)
+        return true
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.home -> {
                 val transaction = supportFragmentManager.beginTransaction()
@@ -58,8 +52,8 @@ class MainActivity: BaseActivity(), NavigationView.OnNavigationItemSelectedListe
                 startActivity(loginIntent)
                 finish()
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        drawer.closeDrawer(GravityCompat.START)
         return true
     }
 

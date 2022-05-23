@@ -10,10 +10,6 @@ import xyz.moshimoshi.adapters.ChatListAdapter
 import xyz.moshimoshi.models.ChatList
 
 class HomeFragment: Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +41,5 @@ class HomeFragment: Fragment() {
 
         recyclerView?.adapter = ChatListAdapter(chatLists)
         recyclerView?.layoutManager = layoutManager
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
     }
 }
