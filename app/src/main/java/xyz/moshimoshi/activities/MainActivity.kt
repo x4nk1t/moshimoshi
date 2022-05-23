@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -55,9 +54,5 @@ class MainActivity: BaseActivity() {
             else -> super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    fun newMessagePressed(view: View){
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show()
     }
 }

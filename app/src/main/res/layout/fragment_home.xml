@@ -24,8 +24,7 @@
             android:src="@drawable/ic_message_24"
             android:layout_margin="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:onClick="newMessagePressed" />
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

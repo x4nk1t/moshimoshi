@@ -16,6 +16,7 @@
         <activity android:name="xyz.moshimoshi.activities.LoginActivity" />
         <activity android:name="xyz.moshimoshi.activities.MainActivity" />
         <activity android:name="xyz.moshimoshi.activities.BaseActivity" />
+        <activity android:name="xyz.moshimoshi.activities.NewMessageActivity" />
         <activity
             android:name="xyz.moshimoshi.activities.SplashActivity"
             android:exported="true">

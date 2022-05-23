@@ -1,5 +1,6 @@
 package xyz.moshimoshi.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -7,10 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
+import xyz.moshimoshi.activities.NewMessageActivity
 import xyz.moshimoshi.adapters.ChatListAdapter
 import xyz.moshimoshi.models.ChatList
 
@@ -44,6 +47,17 @@ class HomeFragment: Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val fab: FloatingActionButton = requireView().findViewById(R.id.new_message_button)
+
+        fab.setOnClickListener {
+            val newMessageIntent = Intent(context, NewMessageActivity::class.java)
+            startActivity(newMessageIntent)
+        }
+    }
+
     private fun loadMessages(){
         refreshLayout.isRefreshing = true
 
@@ -74,7 +88,7 @@ class HomeFragment: Fragment() {
                                 if (userData.isSuccessful) {
                                     val users: ArrayList<String> = ArrayList()
                                     val userResult = userData.result
-                                    val name = userResult.get("name")
+                                    val name = userResult.get("username")
 
                                     val chatList =
                                         ChatList(chatId.toString(), name.toString(), users)
