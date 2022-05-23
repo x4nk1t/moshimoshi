@@ -6,20 +6,26 @@
     tools:context=".fragments.HomeFragment"
     android:id="@+id/homeSwipeRefreshLayout">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatListRecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" >
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/new_message_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="?android:colorPrimary"
-        android:contentDescription="@string/new_message"
-        android:src="@drawable/ic_message_24"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="24dp"
-        android:onClick="newMessagePressed" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_message_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?android:colorPrimary"
+            android:contentDescription="@string/new_message"
+            android:src="@drawable/ic_message_24"
+            android:layout_margin="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="newMessagePressed" />
+    </RelativeLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

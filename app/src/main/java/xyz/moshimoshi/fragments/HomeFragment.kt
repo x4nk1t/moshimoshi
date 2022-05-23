@@ -53,35 +53,42 @@ class HomeFragment: Fragment() {
 
         chatBoxes.addOnCompleteListener(requireActivity()) {
             if(it.isSuccessful){
-                val result = it.result
-                val chatUsers = result.data?.get("chats") as Map<*, *>
-
-                if(chatUsers.isEmpty()){
+                if(it.result.data == null){
                     Toast.makeText(context, "No messages found!", Toast.LENGTH_SHORT).show()
+                    refreshLayout.isRefreshing = false
                 } else {
-                    chatLists.clear()
-                    chatUsers.forEach { chatDetails ->
-                        val userId = chatDetails.key
-                        val chatId = chatDetails.value
-                        val userDetail = database.collection("users").document(userId.toString()).get()
+                    val result = it.result
+                    val chatUsers = result.data?.get("chats") as Map<*, *>
 
-                        userDetail.addOnCompleteListener(requireActivity()){ userData ->
-                            if(userData.isSuccessful){
-                                val users: ArrayList<String> = ArrayList()
-                                val userResult = userData.result
-                                val name = userResult.get("name")
+                    if (chatUsers.isEmpty()) {
+                        Toast.makeText(context, "No messages found!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        chatLists.clear()
+                        chatUsers.forEach { chatDetails ->
+                            val userId = chatDetails.key
+                            val chatId = chatDetails.value
+                            val userDetail =
+                                database.collection("users").document(userId.toString()).get()
 
-                                val chatList = ChatList(chatId.toString(), name.toString(), users)
+                            userDetail.addOnCompleteListener(requireActivity()) { userData ->
+                                if (userData.isSuccessful) {
+                                    val users: ArrayList<String> = ArrayList()
+                                    val userResult = userData.result
+                                    val name = userResult.get("name")
 
-                                users.add(userId.toString())
-                                users.add(user.uid.toString())
+                                    val chatList =
+                                        ChatList(chatId.toString(), name.toString(), users)
 
-                                chatLists.add(chatList)
-                                adapter.notifyDataSetChanged()
-                            }
+                                    users.add(userId.toString())
+                                    users.add(user.uid.toString())
 
-                            if(userId == chatUsers.keys.last()){
-                                refreshLayout.isRefreshing = false
+                                    chatLists.add(chatList)
+                                    adapter.notifyDataSetChanged()
+                                }
+
+                                if (userId == chatUsers.keys.last()) {
+                                    refreshLayout.isRefreshing = false
+                                }
                             }
                         }
                     }
