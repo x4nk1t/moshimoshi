@@ -36,12 +36,7 @@ class HomeFragment: Fragment() {
 
         refreshLayout = view.findViewById(R.id.homeSwipeRefreshLayout)
         refreshLayout.setOnRefreshListener {
-            val thread = Thread{
-                run{
-                    loadMessages()
-                }
-            }
-            thread.start()
+            loadMessages()
         }
 
         loadMessages()
@@ -56,9 +51,6 @@ class HomeFragment: Fragment() {
         val user = Firebase.auth
         val chatBoxes = database.collection("chatbox").document(user.uid!!).get()
 
-        chatBoxes.addOnFailureListener {
-            throw it
-        }
         chatBoxes.addOnCompleteListener(requireActivity()) {
             if(it.isSuccessful){
                 val result = it.result
