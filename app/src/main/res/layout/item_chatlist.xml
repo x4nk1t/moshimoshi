@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:id="@+id/chatLinearLayout">
 
     <ImageView
         android:layout_width="70dp"
@@ -18,7 +19,7 @@
         android:layout_marginTop="5dp" >
 
         <TextView
-            android:id="@+id/chat_name"
+            android:id="@+id/chatName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"

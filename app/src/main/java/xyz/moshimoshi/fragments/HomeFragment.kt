@@ -39,7 +39,7 @@ class HomeFragment: Fragment() {
         chatLists.add(ChatList("John", users, "You: I am GOD!", "user1"))
         chatLists.add(ChatList("Jack", users, "Jack: I am not GOD!", "user2"))
 
-        recyclerView?.adapter = ChatListAdapter(chatLists)
+        recyclerView?.adapter = ChatListAdapter(requireContext(), chatLists)
         recyclerView?.layoutManager = layoutManager
     }
 }
