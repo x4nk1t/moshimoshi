@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import xyz.moshimoshi.R
 import xyz.moshimoshi.adapters.ChatListAdapter
 import xyz.moshimoshi.models.ChatList
@@ -16,7 +17,21 @@ class HomeFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val view =  inflater.inflate(R.layout.fragment_home, container, false)
+
+        val refreshLayout: SwipeRefreshLayout = view.findViewById(R.id.homeSwipeRefreshLayout)
+        refreshLayout.setOnRefreshListener {
+            val thread = Thread(){
+                run{
+                    Thread.sleep(2000)
+
+                    refreshLayout.isRefreshing = false
+                }
+            }
+            thread.start()
+        }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

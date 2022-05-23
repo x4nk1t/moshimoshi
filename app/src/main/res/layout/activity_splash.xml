@@ -6,13 +6,13 @@
 
     <ImageView
         android:id="@+id/image_foreground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher_round"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/app_name" />
+        app:srcCompat="@mipmap/ic_launcher_round" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
