@@ -1,6 +1,6 @@
 package xyz.moshimoshi.adapters
 
-import android.content.Context
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import xyz.moshimoshi.R
 import xyz.moshimoshi.models.ChatList
 import xyz.moshimoshi.utils.ChatFunctions
 
-class ChatListAdapter(private val context: Context, private val dataSet: ArrayList<ChatList>):
+class ChatListAdapter(private val activity: Activity, private val dataSet: ArrayList<ChatList>):
     RecyclerView.Adapter<ChatListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chatlist, parent, false)
@@ -25,7 +25,7 @@ class ChatListAdapter(private val context: Context, private val dataSet: ArrayLi
         holder.chatName.text = data.chatName
 
         holder.linearLayout.setOnClickListener {
-            ChatFunctions.openChat(context, data.chatId!!)
+            ChatFunctions.openChat(activity, data.chatId!!, data.chatName!!)
         }
     }
 

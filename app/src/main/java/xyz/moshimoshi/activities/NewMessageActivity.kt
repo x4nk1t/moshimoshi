@@ -76,7 +76,7 @@ class NewMessageActivity: BaseActivity(){
                             val chatId = chatDetails.value as String
 
                             if(userId == chatUserId){
-                                openChat(this, chatId)
+                                openChat(this, chatId, username)
                             }
                         }
                     }

@@ -33,7 +33,7 @@ class HomeFragment: Fragment() {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
-        adapter = ChatListAdapter(requireContext(), chatLists)
+        adapter = ChatListAdapter(requireActivity(), chatLists)
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = layoutManager
 

@@ -1,16 +1,33 @@
 package xyz.moshimoshi.utils
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import xyz.moshimoshi.activities.MessageActivity
 import xyz.moshimoshi.models.Message
 
 class ChatFunctions {
     companion object {
         fun openNewChat(userId: String, username: String){
             //TODO
+        }
+
+        fun getUsernameFromId(id: String, callback: (username: String) -> Unit){
+            val database = Firebase.firestore
+            val users = database.collection("users").document(id).get()
+
+            users.addOnCompleteListener {
+                if(it.isSuccessful){
+                    val result = it.result
+                    if(result == null){
+                        callback.invoke("")
+                    } else {
+                        callback.invoke(result.get("username").toString())
+                    }
+                }
+            }
         }
 
         fun getMessages(chatId: String, callback: (messages: ArrayList<Message>) -> Unit){
@@ -48,15 +65,11 @@ class ChatFunctions {
             }
         }
 
-        fun openChat(context: Context, chatId: String){
-            getMessages(chatId){ messages ->
-                if(messages.size > 0){
-                    //TODO: Open new activity and display all messages
-                    Toast.makeText(context, "Messages count: "+ messages.size, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Messages not found!", Toast.LENGTH_SHORT).show()
-                }
-            }
+        fun openChat(activity: Activity, chatId: String, othersUsername: String){
+            val intent = Intent(activity, MessageActivity::class.java)
+            intent.putExtra("chatId", chatId)
+            intent.putExtra("username", othersUsername)
+            activity.startActivity(intent)
         }
     }
 }
