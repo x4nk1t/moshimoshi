@@ -84,17 +84,15 @@ class HomeFragment: Fragment() {
                             val userDetail =
                                 database.collection("users").document(userId.toString()).get()
 
-                            userDetail.addOnCompleteListener(requireActivity()) { userData ->
+                            userDetail.addOnCompleteListener { userData ->
                                 if (userData.isSuccessful) {
                                     val users: ArrayList<String> = ArrayList()
                                     val userResult = userData.result
                                     val name = userResult.get("username")
 
-                                    val chatList =
-                                        ChatList(chatId.toString(), name.toString(), users)
-
                                     users.add(userId.toString())
-                                    users.add(user.uid.toString())
+
+                                    val chatList = ChatList(chatId.toString(), name.toString(), users)
 
                                     chatLists.add(chatList)
                                     adapter.notifyDataSetChanged()

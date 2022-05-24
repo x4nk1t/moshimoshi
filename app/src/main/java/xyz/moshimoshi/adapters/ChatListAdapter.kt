@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import xyz.moshimoshi.R
 import xyz.moshimoshi.models.ChatList
+import xyz.moshimoshi.utils.ChatFunctions
 
 class ChatListAdapter(private val context: Context, private val dataSet: ArrayList<ChatList>):
     RecyclerView.Adapter<ChatListViewHolder>() {
@@ -25,7 +25,7 @@ class ChatListAdapter(private val context: Context, private val dataSet: ArrayLi
         holder.chatName.text = data.chatName
 
         holder.linearLayout.setOnClickListener {
-            Toast.makeText(context, "Clicked name: "+ holder.chatId.text.toString(), Toast.LENGTH_SHORT).show()
+            ChatFunctions.openChat(context, data.chatId!!)
         }
     }
 
