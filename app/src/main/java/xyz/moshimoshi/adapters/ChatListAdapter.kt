@@ -25,7 +25,7 @@ class ChatListAdapter(private val activity: Activity, private val dataSet: Array
         holder.chatName.text = data.chatName
 
         holder.linearLayout.setOnClickListener {
-            ChatFunctions.openChat(activity, data.chatId!!, data.chatName!!)
+            ChatFunctions.openChat(activity, data.chatId!!, data.users!!.first()!!)
         }
     }
 

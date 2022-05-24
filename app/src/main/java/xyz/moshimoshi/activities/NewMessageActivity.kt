@@ -8,8 +8,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
+import xyz.moshimoshi.utils.ChatFunctions.Companion.createNewChat
 import xyz.moshimoshi.utils.ChatFunctions.Companion.openChat
-import xyz.moshimoshi.utils.ChatFunctions.Companion.openNewChat
 
 class NewMessageActivity: BaseActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,20 +63,20 @@ class NewMessageActivity: BaseActivity(){
         chatBoxes.addOnCompleteListener(this) {
             if(it.isSuccessful){
                 if(it.result.data == null) {
-                    openNewChat(userId, username)
+                    createNewChat(userId, username)
                 } else {
                     val result = it.result
                     val chatUsers = result.data?.get("chats") as Map<*, *>
 
                     if (chatUsers.isEmpty()) {
-                        openNewChat(userId, username)
+                        createNewChat(userId, username)
                     } else {
                         chatUsers.forEach { chatDetails ->
                             val chatUserId = chatDetails.key
                             val chatId = chatDetails.value as String
 
                             if(userId == chatUserId){
-                                openChat(this, chatId, username)
+                                openChat(this, chatId, chatUserId)
                             }
                         }
                     }

@@ -2,7 +2,6 @@ package xyz.moshimoshi.utils
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.activities.MessageActivity
@@ -10,7 +9,7 @@ import xyz.moshimoshi.models.Message
 
 class ChatFunctions {
     companion object {
-        fun openNewChat(userId: String, username: String){
+        fun createNewChat(userId: String, username: String){
             //TODO
         }
 
@@ -38,9 +37,10 @@ class ChatFunctions {
             chats.addOnCompleteListener {
                 if (it.isSuccessful){
                     if(it.result != null){
-                        it.result.documents.forEach { docs ->
+                        val documents = it.result.documents
+
+                        documents.forEach { docs ->
                             val messageId = docs.id
-                            val chatId = docs.get("chats_id") as String
                             val receiverId = docs.get("receiverId") as String
                             val senderId = docs.get("senderId") as String
                             val timestamp = docs.get("timestamp") as String
@@ -58,17 +58,16 @@ class ChatFunctions {
                             callback.invoke(ArrayList())
                         }
                     } else {
-                        Log.e("chatbox", "result not found")
                         callback.invoke(ArrayList())
                     }
                 }
             }
         }
 
-        fun openChat(activity: Activity, chatId: String, othersUsername: String){
+        fun openChat(activity: Activity, chatId: String, receiverId: String){
             val intent = Intent(activity, MessageActivity::class.java)
             intent.putExtra("chatId", chatId)
-            intent.putExtra("username", othersUsername)
+            intent.putExtra("receiverId", receiverId)
             activity.startActivity(intent)
         }
     }

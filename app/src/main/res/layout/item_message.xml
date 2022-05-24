@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginStart="10dp"
+    android:layout_marginBottom="2dp">
+
+    <TextView
+        android:id="@+id/messageId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/itemMessageLeftImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_person_outline_24"
+        android:visibility="gone"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/itemMessageLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:padding="15dp"
+        android:gravity="center|start"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/rounded_corners_left"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:layout_toEndOf="@+id/itemMessageLeftImage"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:id="@+id/itemMessageRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_corners_right"
+            android:textColor="@color/white"
+            android:padding="15dp"
+            android:textSize="15sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>
