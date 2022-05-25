@@ -15,6 +15,7 @@ import xyz.moshimoshi.R
 import xyz.moshimoshi.adapters.MessageAdapter
 import xyz.moshimoshi.models.Message
 import xyz.moshimoshi.utils.ChatFunctions
+import xyz.moshimoshi.utils.ChatFunctions.Companion.createChatBox
 import xyz.moshimoshi.utils.ChatFunctions.Companion.getUsernameFromId
 
 class MessageActivity: BaseActivity() {
@@ -66,11 +67,6 @@ class MessageActivity: BaseActivity() {
 
     private fun loadMessages(chatId: String, callback: (messageLoaded: ArrayList<Message>) -> Unit){
         ChatFunctions.getMessages(chatId) { messages ->
-            messages.sortBy { message -> message.timestamp }
-
-            if (messages.size == 0) {
-                Toast.makeText(this, "No messages found!", Toast.LENGTH_SHORT).show()
-            }
             callback.invoke(messages)
         }
     }
@@ -105,26 +101,22 @@ class MessageActivity: BaseActivity() {
         hashMap["active"] = true
         hashMap["lastMessage"] = message
         hashMap["lastMessageBy"] = senderId!!
+        hashMap["lastMessageTimestamp"] = System.currentTimeMillis()
 
         database.collection("chats").document(chatId!!).set(hashMap)
     }
 
     private fun createChatboxIfNotAvailable(userId: String, callback: (found: Boolean) -> Unit){
         val database = Firebase.firestore
-        val currentUser = Firebase.auth.currentUser!!
+
         database.collection("chatbox").document(userId).get()
             .addOnCompleteListener {
-                val chatHashMap = HashMap<String, String>()
-                chatHashMap[currentUser.uid] = chatId!!
-
                 if(it.result.data == null){
-                    val chats = HashMap<String, Any>()
-                    chats["chats"] = chatHashMap
-
-                    database.collection("chatbox").document(userId).set(chats)
-                    callback.invoke(true)
+                    createChatBox(userId, receiverId!!, chatId!!){ success ->
+                        callback.invoke(success)
+                    }
                 } else {
-                    val chats = it.result.data!!["chats"] as Map<*, *>
+                    val chats = it.result.data as Map<*, *>
                     chats.forEach { chatDetail ->
                         val chatUserId = chatDetail.key
 

@@ -5,5 +5,6 @@ data class ChatList(
     var chatName: String? = null,
     var users: ArrayList<String>? = null,
     val chatLastMessage: String? = null,
-    val chatLastMessageBy: String? = null
+    val chatLastMessageBy: String? = null,
+    val chatLastMessageTimestamp: Long? = null
 )

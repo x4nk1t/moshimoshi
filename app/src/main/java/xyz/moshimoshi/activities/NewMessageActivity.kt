@@ -1,6 +1,7 @@
 package xyz.moshimoshi.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -38,10 +39,9 @@ class NewMessageActivity: BaseActivity(){
                             val result = it.result
                             if(result.documents.size > 0) {
                                 val userDetail = result.documents[0]
-                                val username = userDetail.get("username").toString()
                                 val userId = userDetail.id
 
-                                checkChatAvailable(userId, username)
+                                checkChatAvailable(userId)
                             } else {
                                 Toast.makeText(applicationContext, "User not found!", Toast.LENGTH_SHORT).show()
                             }
@@ -55,7 +55,7 @@ class NewMessageActivity: BaseActivity(){
         })
     }
 
-    fun checkChatAvailable(userId: String, username: String){
+    fun checkChatAvailable(userId: String){
         val database = Firebase.firestore
         val user = Firebase.auth
         val chatBoxes = database.collection("chatbox").document(user.uid!!).get()
@@ -63,20 +63,29 @@ class NewMessageActivity: BaseActivity(){
         chatBoxes.addOnCompleteListener(this) {
             if(it.isSuccessful){
                 if(it.result.data == null) {
-                    createNewChat(userId, username)
+                    createNewChat(this, userId)
                 } else {
                     val result = it.result
-                    val chatUsers = result.data?.get("chats") as Map<*, *>
+                    val chatUsers = result.data as Map<*, *>
 
                     if (chatUsers.isEmpty()) {
-                        createNewChat(userId, username)
+                        createNewChat(this, userId)
                     } else {
+                        var chatFound = false
                         chatUsers.forEach { chatDetails ->
-                            val chatUserId = chatDetails.key
+                            val chatUserId = chatDetails.key as String
                             val chatId = chatDetails.value as String
 
                             if(userId == chatUserId){
+                                chatFound = true
                                 openChat(this, chatId, chatUserId)
+                                finish()
+                            }
+
+                            if(chatUserId == chatUsers.keys.last()){
+                                if(!chatFound){
+                                    createNewChat(this, userId)
+                                }
                             }
                         }
                     }

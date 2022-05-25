@@ -73,10 +73,11 @@ class HomeFragment: Fragment() {
                     refreshLayout.isRefreshing = false
                 } else {
                     val result = it.result
-                    val chatUsers = result.data?.get("chats") as Map<*, *>
+                    val chatUsers = result.data as Map<*, *>
 
                     if (chatUsers.isEmpty()) {
                         Toast.makeText(context, "No messages found!", Toast.LENGTH_SHORT).show()
+                        refreshLayout.isRefreshing = false
                     } else {
                         chatLists.clear()
                         chatUsers.forEach { chatDetails ->
@@ -100,10 +101,13 @@ class HomeFragment: Fragment() {
                                                 val resultData = chats.result.data!!
                                                 val chatLastMessage = resultData["lastMessage"] as String
                                                 val chatLastMessageBy = resultData["lastMessageBy"] as String
-                                                val chatList = ChatList(chatId.toString(), name.toString(), users, chatLastMessage, chatLastMessageBy)
+                                                val chatLastMessageTimestamp = resultData["lastMessageTimestamp"] as Long
+                                                val chatList = ChatList(chatId.toString(), name.toString(), users, chatLastMessage, chatLastMessageBy, chatLastMessageTimestamp)
 
                                                 chatLists.add(chatList)
-                                                adapter.notifyItemChanged(chatLists.size - 1)
+                                                chatLists.sortByDescending { chat -> chat.chatLastMessageTimestamp }
+
+                                                adapter.notifyDataSetChanged()
                                             }
                                         } else {
                                             Toast.makeText(context, "Something went wrong! Couldn't load messages!", Toast.LENGTH_SHORT).show()

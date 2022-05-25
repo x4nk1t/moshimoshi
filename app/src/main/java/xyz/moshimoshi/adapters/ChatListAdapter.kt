@@ -23,10 +23,13 @@ class ChatListAdapter(private val activity: Activity, private val dataSet: Array
         val data = dataSet[position]
         holder.chatId.text = data.chatId
         holder.chatName.text = data.chatName
-        holder.chatLastMessage.text = "${data.chatName}: ${data.chatLastMessage}"
 
-        if(data.chatLastMessageBy == senderId) {
+        if(data.chatLastMessageBy == ""){
+            holder.chatLastMessage.text = "No messages available!"
+        } else if(data.chatLastMessageBy == senderId) {
             holder.chatLastMessage.text = "You: ${data.chatLastMessage}"
+        } else {
+            holder.chatLastMessage.text = "${data.chatName}: ${data.chatLastMessage}"
         }
 
         holder.linearLayout.setOnClickListener {
