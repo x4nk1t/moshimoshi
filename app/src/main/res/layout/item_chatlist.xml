@@ -35,10 +35,10 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
+            android:id="@+id/chatLastMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="@string/tap_to_load_messages"/>
+            android:textSize="15sp"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -11,7 +11,7 @@ import xyz.moshimoshi.R
 import xyz.moshimoshi.models.ChatList
 import xyz.moshimoshi.utils.ChatFunctions
 
-class ChatListAdapter(private val activity: Activity, private val dataSet: ArrayList<ChatList>):
+class ChatListAdapter(private val activity: Activity, private val dataSet: ArrayList<ChatList>, private val senderId: String):
     RecyclerView.Adapter<ChatListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chatlist, parent, false)
@@ -23,6 +23,11 @@ class ChatListAdapter(private val activity: Activity, private val dataSet: Array
         val data = dataSet[position]
         holder.chatId.text = data.chatId
         holder.chatName.text = data.chatName
+        holder.chatLastMessage.text = "${data.chatName}: ${data.chatLastMessage}"
+
+        if(data.chatLastMessageBy == senderId) {
+            holder.chatLastMessage.text = "You: ${data.chatLastMessage}"
+        }
 
         holder.linearLayout.setOnClickListener {
             ChatFunctions.openChat(activity, data.chatId!!, data.users!!.first())
@@ -39,4 +44,5 @@ class ChatListViewHolder(view: View): RecyclerView.ViewHolder(view){
     val linearLayout: LinearLayout = view.findViewById(R.id.chatLinearLayout)
     val chatName: TextView = view.findViewById(R.id.chatName)
     val chatId: TextView = view.findViewById(R.id.chatId)
+    val chatLastMessage: TextView = view.findViewById(R.id.chatLastMessage)
 }

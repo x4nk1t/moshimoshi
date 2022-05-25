@@ -89,12 +89,24 @@ class MessageActivity: BaseActivity() {
                             allMessages.add(messageModel)
                             recyclerView.adapter!!.notifyItemInserted(allMessages.size - 1)
 
+                            changeLastMessage(messageInputView.text.toString())
+
                             messageInputView.text.clear()
                             recyclerView.scrollToPosition(allMessages.size - 1)
                         }
                     }
             }
         }
+    }
+
+    private fun changeLastMessage(message: String){
+        val database = Firebase.firestore
+        val hashMap = HashMap<String, Any>()
+        hashMap["active"] = true
+        hashMap["lastMessage"] = message
+        hashMap["lastMessageBy"] = senderId!!
+
+        database.collection("chats").document(chatId!!).set(hashMap)
     }
 
     private fun createChatboxIfNotAvailable(userId: String, callback: (found: Boolean) -> Unit){

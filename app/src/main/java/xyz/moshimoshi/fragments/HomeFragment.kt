@@ -33,7 +33,8 @@ class HomeFragment: Fragment() {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
-        adapter = ChatListAdapter(requireActivity(), chatLists)
+        val senderId = Firebase.auth.currentUser!!.uid
+        adapter = ChatListAdapter(requireActivity(), chatLists, senderId)
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = layoutManager
 
@@ -81,8 +82,7 @@ class HomeFragment: Fragment() {
                         chatUsers.forEach { chatDetails ->
                             val userId = chatDetails.key
                             val chatId = chatDetails.value
-                            val userDetail =
-                                database.collection("users").document(userId.toString()).get()
+                            val userDetail = database.collection("users").document(userId.toString()).get()
 
                             userDetail.addOnCompleteListener { userData ->
                                 if (userData.isSuccessful) {
@@ -92,10 +92,23 @@ class HomeFragment: Fragment() {
 
                                     users.add(userId.toString())
 
-                                    val chatList = ChatList(chatId.toString(), name.toString(), users)
+                                    val chatDetail = database.collection("chats").document(chatId.toString()).get()
 
-                                    chatLists.add(chatList)
-                                    adapter.notifyItemChanged(chatLists.size - 1)
+                                    chatDetail.addOnCompleteListener { chats ->
+                                        if(chats.isSuccessful){
+                                            if(chats.result.data != null) {
+                                                val resultData = chats.result.data!!
+                                                val chatLastMessage = resultData["lastMessage"] as String
+                                                val chatLastMessageBy = resultData["lastMessageBy"] as String
+                                                val chatList = ChatList(chatId.toString(), name.toString(), users, chatLastMessage, chatLastMessageBy)
+
+                                                chatLists.add(chatList)
+                                                adapter.notifyItemChanged(chatLists.size - 1)
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "Something went wrong! Couldn't load messages!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                                 }
 
                                 if (userId == chatUsers.keys.last()) {
