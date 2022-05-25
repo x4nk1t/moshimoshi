@@ -2,13 +2,15 @@ package xyz.moshimoshi.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
@@ -17,6 +19,8 @@ import xyz.moshimoshi.models.Message
 import xyz.moshimoshi.utils.ChatFunctions
 import xyz.moshimoshi.utils.ChatFunctions.Companion.createChatBox
 import xyz.moshimoshi.utils.ChatFunctions.Companion.getUsernameFromId
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MessageActivity: BaseActivity() {
     private var chatId: String? = null
@@ -25,7 +29,6 @@ class MessageActivity: BaseActivity() {
     private var allMessages: ArrayList<Message> = ArrayList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MessageAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +49,8 @@ class MessageActivity: BaseActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
 
+        registerMessageListener()
+
         getUsernameFromId(receiverId!!){ username ->
             supportActionBar?.title = username
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -65,6 +70,36 @@ class MessageActivity: BaseActivity() {
         }
     }
 
+    private fun registerMessageListener(){
+        val database = Firebase.firestore
+        database.collection("messages").whereEqualTo("receiverId", senderId!!)
+            .addSnapshotListener { snapshots, e ->
+                if(e != null){
+                    Log.e("MessageListener", "Failed to listen!")
+                    return@addSnapshotListener
+                }
+                if(snapshots != null){
+                    val receivedDocuments = snapshots.documentChanges
+                    receivedDocuments.forEach { datas ->
+                        if(datas.type == DocumentChange.Type.ADDED) {
+                            val messageId = datas.document.id
+                            val receivedData = datas.document.data
+                            val receiverId = receivedData["receiverId"] as String
+                            val senderId = receivedData["senderId"] as String
+                            val timestamp = receivedData["timestamp"] as Long
+                            val readTimestamp = receivedData["readTimestamp"] as Long
+                            val message = receivedData["message"] as String
+
+                            allMessages.add(Message(messageId, chatId, senderId, receiverId, message, timestamp, readTimestamp))
+
+                            adapter.notifyItemInserted(allMessages.size - 1)
+                            recyclerView.scrollToPosition(allMessages.size - 1)
+                        }
+                    }
+                }
+            }
+    }
+
     private fun loadMessages(chatId: String, callback: (messageLoaded: ArrayList<Message>) -> Unit){
         ChatFunctions.getMessages(chatId) { messages ->
             callback.invoke(messages)
@@ -78,10 +113,11 @@ class MessageActivity: BaseActivity() {
         if(messageInputView.text.toString() != ""){
             val messageModel = Message(null, chatId, senderId, receiverId, messageInputView.text.toString())
 
-            createChatboxIfNotAvailable(receiverId!!){ created ->
-                database.collection("messages").document().set(messageModel.toHash())
+            createChatboxIfNotAvailable(receiverId!!){ _ ->
+                database.collection("messages").add(messageModel.toHash())
                     .addOnCompleteListener {
                         if (it.isSuccessful){
+                            messageModel.id = it.result.id
                             allMessages.add(messageModel)
                             recyclerView.adapter!!.notifyItemInserted(allMessages.size - 1)
 

@@ -2,6 +2,7 @@ package xyz.moshimoshi.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
@@ -43,9 +45,40 @@ class HomeFragment: Fragment() {
             loadMessages()
         }
 
+        registerMessageListener()
+
         loadMessages()
 
         return view
+    }
+
+    private fun registerMessageListener(){
+        val user = Firebase.auth.currentUser!!
+        val database = Firebase.firestore
+        database.collection("messages").whereEqualTo("receiverId", user.uid)
+            .addSnapshotListener { snapshots, e ->
+                if(e != null){
+                    Log.e("MessageListener", "Failed to listen")
+                    return@addSnapshotListener
+                }
+                if(snapshots != null){
+                    val receivedDocuments = snapshots.documentChanges
+                    receivedDocuments.forEach { datas ->
+                        if(datas.type == DocumentChange.Type.ADDED) {
+                            val receivedData = datas.document.data
+                            for (chatList in chatLists) {
+                                if(chatList.chatId == receivedData["chats_id"]){
+                                    chatList.chatLastMessage = receivedData["message"] as String
+                                    chatList.chatLastMessageBy = receivedData["senderId"] as String
+                                    chatList.chatLastMessageTimestamp = receivedData["timestamp"] as Long
+
+                                    adapter.notifyItemChanged(chatLists.indexOf(chatList))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,7 +140,7 @@ class HomeFragment: Fragment() {
                                                 chatLists.add(chatList)
                                                 chatLists.sortByDescending { chat -> chat.chatLastMessageTimestamp }
 
-                                                adapter.notifyDataSetChanged()
+                                                adapter.notifyItemInserted(chatLists.size - 1)
                                             }
                                         } else {
                                             Toast.makeText(context, "Something went wrong! Couldn't load messages!", Toast.LENGTH_SHORT).show()
