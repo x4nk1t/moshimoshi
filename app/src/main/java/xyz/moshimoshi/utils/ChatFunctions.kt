@@ -11,6 +11,41 @@ import xyz.moshimoshi.models.Message
 
 class ChatFunctions {
     companion object {
+        private fun createNewUser(userId: String, username: String, email: String, callback: (userData: HashMap<String, Any>) -> Unit){
+            val database = Firebase.firestore
+            val userHashMap = HashMap<String, Any>()
+            userHashMap["username"] = username
+            userHashMap["email"] = email
+
+            database.collection("users").document(userId).set(userHashMap)
+                .addOnCompleteListener {
+                    if(it.isSuccessful){
+                        userHashMap["id"] = userId
+                        callback.invoke(userHashMap)
+                    } else {
+                        callback.invoke(HashMap())
+                    }
+                }
+        }
+
+        fun signUp(username: String, email: String, password: String, callback: (success: Boolean) -> Unit){
+            val auth = Firebase.auth
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if(it.isSuccessful){
+                        val userId = it.result.user!!.uid
+
+                        createNewUser(userId, username, email){ userData ->
+                            if(userData.isEmpty()){
+                                callback.invoke(false)
+                            } else {
+                                callback.invoke(true)
+                            }
+                        }
+                    }
+                }
+        }
+
         fun createNewChat(activity: Activity, userId: String){
             val currentUser = Firebase.auth.currentUser!!
 

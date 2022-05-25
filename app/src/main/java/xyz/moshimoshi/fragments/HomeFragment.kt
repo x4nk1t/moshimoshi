@@ -46,7 +46,6 @@ class HomeFragment: Fragment() {
         }
 
         registerMessageListener()
-
         loadMessages()
 
         return view
@@ -72,7 +71,7 @@ class HomeFragment: Fragment() {
                                     chatList.chatLastMessageBy = receivedData["senderId"] as String
                                     chatList.chatLastMessageTimestamp = receivedData["timestamp"] as Long
 
-                                    adapter.notifyItemChanged(chatLists.indexOf(chatList))
+                                    adapter.notifyDataSetChanged()
                                 }
                             }
                         }
@@ -140,7 +139,7 @@ class HomeFragment: Fragment() {
                                                 chatLists.add(chatList)
                                                 chatLists.sortByDescending { chat -> chat.chatLastMessageTimestamp }
 
-                                                adapter.notifyItemInserted(chatLists.size - 1)
+                                                adapter.notifyDataSetChanged()
                                             }
                                         } else {
                                             Toast.makeText(context, "Something went wrong! Couldn't load messages!", Toast.LENGTH_SHORT).show()
