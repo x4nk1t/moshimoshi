@@ -95,7 +95,7 @@ class HomeFragment: Fragment() {
                                     val chatList = ChatList(chatId.toString(), name.toString(), users)
 
                                     chatLists.add(chatList)
-                                    adapter.notifyDataSetChanged()
+                                    adapter.notifyItemChanged(chatLists.size - 1)
                                 }
 
                                 if (userId == chatUsers.keys.last()) {

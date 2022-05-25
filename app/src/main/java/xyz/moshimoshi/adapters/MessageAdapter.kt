@@ -21,6 +21,10 @@ class MessageAdapter(val context: Context, private val messages: ArrayList<Messa
         val data = messages[position]
         val id = data.senderId
 
+        holder.rightView.visibility = View.INVISIBLE
+        holder.leftView.visibility = View.INVISIBLE
+        holder.leftImage.visibility = View.INVISIBLE
+
         if(senderId == id){
             holder.rightView.text = data.message
             holder.rightView.visibility = View.VISIBLE

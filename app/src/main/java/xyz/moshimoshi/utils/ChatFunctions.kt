@@ -43,8 +43,8 @@ class ChatFunctions {
                             val messageId = docs.id
                             val receiverId = docs.get("receiverId") as String
                             val senderId = docs.get("senderId") as String
-                            val timestamp = docs.get("timestamp") as String
-                            val readTimestamp = docs.get("readTimestamp") as String
+                            val timestamp = docs.get("timestamp") as Long
+                            val readTimestamp = docs.get("readTimestamp") as Long
                             val message = docs.get("message") as String
 
                             messages.add(Message(messageId, chatId, senderId, receiverId, message, timestamp, readTimestamp))

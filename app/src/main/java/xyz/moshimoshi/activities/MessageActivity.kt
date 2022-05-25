@@ -23,20 +23,27 @@ class MessageActivity: BaseActivity() {
     private var receiverId: String? = null
     private var allMessages: ArrayList<Message> = ArrayList()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MessageAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
         initToolbar(R.id.messageToolbar)
 
+        senderId = Firebase.auth.currentUser!!.uid
+        chatId = intent.getStringExtra("chatId")
+        receiverId = intent.getStringExtra("receiverId")
+
         recyclerView = findViewById(R.id.messageRecyclerView)
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
+        layoutManager.stackFromEnd = true
 
-        senderId = Firebase.auth.currentUser!!.uid
+        adapter = MessageAdapter(this, allMessages, senderId.toString())
 
-        chatId = intent.getStringExtra("chatId")
-        receiverId = intent.getStringExtra("receiverId")
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = layoutManager
 
         getUsernameFromId(receiverId!!){ username ->
             supportActionBar?.title = username
@@ -44,9 +51,11 @@ class MessageActivity: BaseActivity() {
 
             if(chatId != null) {
                 loadMessages(chatId!!){
-                    allMessages = it
-                    recyclerView.adapter = MessageAdapter(this, allMessages, senderId.toString())
-                    recyclerView.layoutManager = layoutManager
+                    it.forEach { message ->
+                        allMessages.add(message)
+                        adapter.notifyItemInserted(allMessages.size -1)
+                    }
+                    recyclerView.scrollToPosition(allMessages.size - 1)
                 }
             } else {
                 startActivity(Intent(this, MainActivity::class.java))
@@ -57,6 +66,8 @@ class MessageActivity: BaseActivity() {
 
     private fun loadMessages(chatId: String, callback: (messageLoaded: ArrayList<Message>) -> Unit){
         ChatFunctions.getMessages(chatId) { messages ->
+            messages.sortBy { message -> message.timestamp }
+
             if (messages.size == 0) {
                 Toast.makeText(this, "No messages found!", Toast.LENGTH_SHORT).show()
             }
@@ -76,7 +87,10 @@ class MessageActivity: BaseActivity() {
                     .addOnCompleteListener {
                         if (it.isSuccessful){
                             allMessages.add(messageModel)
-                            recyclerView.adapter!!.notifyDataSetChanged()
+                            recyclerView.adapter!!.notifyItemInserted(allMessages.size - 1)
+
+                            messageInputView.text.clear()
+                            recyclerView.scrollToPosition(allMessages.size - 1)
                         }
                     }
             }

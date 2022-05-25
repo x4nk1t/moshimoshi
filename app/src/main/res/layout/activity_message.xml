@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     tools:context=".activities.MessageActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -18,38 +17,38 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messageRecyclerView"
         android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="48dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messageToolbar" />
+        app:layout_constraintTop_toBottomOf="@id/messageToolbar"
+        app:layout_constraintBottom_toBottomOf="@id/constraintLayout"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toBottomOf="@+id/messageToolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/messageInput"
-            android:layout_width="325dp"
-            android:layout_height="match_parent"
+            android:layout_width="360dp"
+            android:layout_height="48dp"
             android:autofillHints="off"
             android:hint="@string/enter_message"
             android:inputType="textLongMessage"
-            app:layout_constraintEnd_toStartOf="@+id/sendMessageButton"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="1dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/sendMessageButton"/>
 
         <Button
             android:id="@+id/sendMessageButton"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="@drawable/ic_baseline_send_24"
             android:onClick="sendMessage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/messageInput" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/messageInput"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
