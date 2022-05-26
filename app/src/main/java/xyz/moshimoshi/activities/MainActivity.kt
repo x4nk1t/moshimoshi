@@ -10,8 +10,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
 import xyz.moshimoshi.fragments.HomeFragment
+import xyz.moshimoshi.fragments.UpdateDialogue
+import xyz.moshimoshi.utils.updater.UpdateManager
 
 class MainActivity: BaseActivity() {
+    private lateinit var updateManager: UpdateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +28,15 @@ class MainActivity: BaseActivity() {
             startActivity(loginIntent)
             finish()
             return
+        }
+
+        updateManager = UpdateManager(this)
+
+        updateManager.checkForUpdate(){ uf, release ->
+            if(uf){
+                val updateDialogue = UpdateDialogue(release)
+                updateDialogue.show(supportFragmentManager, "Update Dialogue")
+            }
         }
 
         initToolbar(R.id.toolbar)
