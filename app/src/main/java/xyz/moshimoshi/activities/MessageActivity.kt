@@ -10,13 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
 import xyz.moshimoshi.adapters.MessageAdapter
 import xyz.moshimoshi.models.Message
-import xyz.moshimoshi.utils.ChatFunctions
 import xyz.moshimoshi.utils.ChatFunctions.Companion.createChatBox
 import xyz.moshimoshi.utils.ChatFunctions.Companion.getUsernameFromId
 import kotlin.collections.ArrayList
@@ -49,20 +47,12 @@ class MessageActivity: BaseActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
 
-        registerMessageListener()
-
         getUsernameFromId(receiverId!!){ username ->
             supportActionBar?.title = username
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             if(chatId != null) {
-                loadMessages(chatId!!){
-                    it.forEach { message ->
-                        allMessages.add(message)
-                        adapter.notifyItemInserted(allMessages.size -1)
-                    }
-                    recyclerView.scrollToPosition(allMessages.size - 1)
-                }
+                registerMessageListener()
             } else {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
@@ -72,7 +62,7 @@ class MessageActivity: BaseActivity() {
 
     private fun registerMessageListener(){
         val database = Firebase.firestore
-        database.collection("messages").whereEqualTo("receiverId", senderId!!)
+        database.collection("messages").whereEqualTo("chats_id", chatId)
             .addSnapshotListener { snapshots, e ->
                 if(e != null){
                     Log.e("MessageListener", "Failed to listen!")
@@ -91,6 +81,7 @@ class MessageActivity: BaseActivity() {
                             val message = receivedData["message"] as String
 
                             allMessages.add(Message(messageId, chatId, senderId, receiverId, message, timestamp, readTimestamp))
+                            allMessages.sortBy { m -> m.timestamp }
 
                             adapter.notifyItemInserted(allMessages.size - 1)
                             recyclerView.scrollToPosition(allMessages.size - 1)
@@ -98,12 +89,6 @@ class MessageActivity: BaseActivity() {
                     }
                 }
             }
-    }
-
-    private fun loadMessages(chatId: String, callback: (messageLoaded: ArrayList<Message>) -> Unit){
-        ChatFunctions.getMessages(chatId) { messages ->
-            callback.invoke(messages)
-        }
     }
 
     fun sendMessage(view: View){
@@ -118,13 +103,8 @@ class MessageActivity: BaseActivity() {
                     .addOnCompleteListener {
                         if (it.isSuccessful){
                             messageModel.id = it.result.id
-                            allMessages.add(messageModel)
-                            recyclerView.adapter!!.notifyItemInserted(allMessages.size - 1)
-
                             changeLastMessage(messageInputView.text.toString())
-
                             messageInputView.text.clear()
-                            recyclerView.scrollToPosition(allMessages.size - 1)
                         }
                     }
             }

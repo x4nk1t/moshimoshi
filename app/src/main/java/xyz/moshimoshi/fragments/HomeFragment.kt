@@ -12,6 +12,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
@@ -54,30 +56,39 @@ class HomeFragment: Fragment() {
     private fun registerMessageListener(){
         val user = Firebase.auth.currentUser!!
         val database = Firebase.firestore
+        database.collection("messages").whereEqualTo("senderId", user.uid)
+            .addSnapshotListener { snapshots, e ->
+                snapshotListener(snapshots, e)
+            }
+
         database.collection("messages").whereEqualTo("receiverId", user.uid)
             .addSnapshotListener { snapshots, e ->
-                if(e != null){
-                    Log.e("MessageListener", "Failed to listen")
-                    return@addSnapshotListener
-                }
-                if(snapshots != null){
-                    val receivedDocuments = snapshots.documentChanges
-                    receivedDocuments.forEach { datas ->
-                        if(datas.type == DocumentChange.Type.ADDED) {
-                            val receivedData = datas.document.data
-                            for (chatList in chatLists) {
-                                if(chatList.chatId == receivedData["chats_id"]){
-                                    chatList.chatLastMessage = receivedData["message"] as String
-                                    chatList.chatLastMessageBy = receivedData["senderId"] as String
-                                    chatList.chatLastMessageTimestamp = receivedData["timestamp"] as Long
+                snapshotListener(snapshots, e)
+            }
+    }
 
-                                    adapter.notifyDataSetChanged()
-                                }
-                            }
+    private fun snapshotListener(snapshots: QuerySnapshot?, e: FirebaseFirestoreException?){
+        if(e != null){
+            Log.e("MessageListener", "Failed to listen")
+            return
+        }
+        if(snapshots != null){
+            val receivedDocuments = snapshots.documentChanges
+            receivedDocuments.forEach { datas ->
+                if(datas.type == DocumentChange.Type.ADDED) {
+                    val receivedData = datas.document.data
+                    for (chatList in chatLists) {
+                        if(chatList.chatId == receivedData["chats_id"]){
+                            chatList.chatLastMessage = receivedData["message"] as String
+                            chatList.chatLastMessageBy = receivedData["senderId"] as String
+                            chatList.chatLastMessageTimestamp = receivedData["timestamp"] as Long
+
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
             }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
