@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import xyz.moshimoshi.R
 import xyz.moshimoshi.activities.NewMessageActivity
 import xyz.moshimoshi.adapters.ChatListAdapter
