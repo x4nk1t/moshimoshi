@@ -15,7 +15,7 @@ class SplashActivity: AppCompatActivity() {
         window.statusBarColor = getColor(R.color.black)
 
         val thread = Thread {
-            Thread.sleep(2000)
+            Thread.sleep(200)
 
             val afterIntent: Intent
 

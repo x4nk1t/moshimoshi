@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.MessageActivity">
+    tools:context=".activities.MessageActivity"
+    android:id="@+id/messageConstraintLayout">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/messageToolbar"
@@ -39,7 +40,8 @@
             android:layout_height="48dp"
             android:autofillHints="off"
             android:hint="@string/enter_message"
-            android:inputType="textLongMessage"
+            android:inputType="text"
+            android:imeOptions="actionSend"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/sendMessageButton"/>
 

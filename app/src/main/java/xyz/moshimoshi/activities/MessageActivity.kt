@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +41,15 @@ class MessageActivity: BaseActivity() {
         receiverId = intent.getStringExtra("receiverId")
 
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(chatId.hashCode())
+
+        val messageInput: EditText = findViewById(R.id.messageInput)
+        messageInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendMessage(findViewById(R.id.messageConstraintLayout))
+                return@setOnEditorActionListener true
+            }
+            false
+        }
 
         recyclerView = findViewById(R.id.messageRecyclerView)
         val layoutManager = LinearLayoutManager(this)
