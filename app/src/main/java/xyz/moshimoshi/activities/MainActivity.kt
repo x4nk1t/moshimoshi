@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import xyz.moshimoshi.R
 import xyz.moshimoshi.fragments.HomeFragment
 import xyz.moshimoshi.fragments.UpdateDialogue
@@ -23,6 +24,7 @@ class MainActivity: BaseActivity() {
         val user = Firebase.auth.currentUser
 
         if(user == null){
+            unsubscribeFromMessages()
             Toast.makeText(this, "Something went wrong! Please login again!", Toast.LENGTH_SHORT).show()
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivity(loginIntent)
@@ -38,6 +40,8 @@ class MainActivity: BaseActivity() {
                 updateDialogue.show(supportFragmentManager, "Update Dialogue")
             }
         }
+
+        subscribeToMessages()
 
         initToolbar(R.id.toolbar)
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, HomeFragment()).commit()
@@ -57,6 +61,7 @@ class MainActivity: BaseActivity() {
                 transaction.commit()
             }
             R.id.logout -> {
+                unsubscribeFromMessages()
                 Firebase.auth.signOut()
                 Toast.makeText(this, "Logged out!", Toast.LENGTH_SHORT).show()
                 val loginIntent = Intent(this, LoginActivity::class.java)
@@ -66,5 +71,15 @@ class MainActivity: BaseActivity() {
             else -> super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun unsubscribeFromMessages(){
+        val user = Firebase.auth.currentUser!!
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("userid_"+ user.uid)
+    }
+
+    private fun subscribeToMessages(){
+        val user = Firebase.auth.currentUser!!
+        FirebaseMessaging.getInstance().subscribeToTopic("userid_"+ user.uid)
     }
 }
