@@ -36,23 +36,13 @@
 
         <EditText
             android:id="@+id/messageInput"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:autofillHints="off"
             android:hint="@string/enter_message"
             android:inputType="text"
             android:imeOptions="actionSend"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/sendMessageButton"/>
-
-        <Button
-            android:id="@+id/sendMessageButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/ic_baseline_send_24"
-            android:onClick="sendMessage"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/messageInput"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
