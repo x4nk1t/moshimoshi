@@ -5,51 +5,90 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
-import android.widget.RemoteViews
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import androidx.core.app.TaskStackBuilder
+import androidx.core.graphics.drawable.toBitmap
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import xyz.moshimoshi.activities.MainActivity
+import xyz.moshimoshi.activities.MessageActivity
+import xyz.moshimoshi.utils.ChatFunctions
 
 private const val channelId = "notification_channel"
-private const val channelName = "xyz.moshimoshi.notification"
+private const val channelName = "Receive Messages"
 private const val channelDescription = "Shows notifications whenever work starts"
 
 class FirebaseService: FirebaseMessagingService() {
-    val firestore = Firebase.firestore
-    val userRef by lazy { firestore.collection("users") }
-
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+
+        val data = message.data
+        if(data.isEmpty()){
+            return
+        }
+
+        val receivedMessage = data["message"]!!
+        val senderId = data["senderId"]!!
+        val chatId = data["chatId"]!!
+
+        ChatFunctions.getUsernameFromId(senderId){ senderUsername ->
+            generateNotification(chatId, senderId, senderUsername, receivedMessage)
+        }
     }
 
-    fun generateNotification(title: String, message: String){
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    private fun generateNotification(chatId: String, senderId: String, title: String, message: String){
+        val resultIntent = Intent(this, MessageActivity::class.java)
+        resultIntent.putExtra("chatId", chatId)
+        resultIntent.putExtra("receiverId", senderId)
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val chatIdInt = chatId.hashCode()
+        val pendingIntent: PendingIntent? = pendingIntent(resultIntent)
+
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setAutoCancel(false)
-            .setVibrate(longArrayOf(1000,1000,1000,1000))
-            .setOnlyAlertOnce(true)
+            .setLargeIcon((getBitmapDrawable(this)))
+            .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setContentTitle(title)
             .setContentText(message)
 
+        notificationManager().activeNotifications.forEach { statusBarNotification ->
+            if(statusBarNotification.id == chatId.hashCode()){
+                val extras = statusBarNotification.notification.extras
+
+                val previousText = extras.get("android.text") as String
+                val newContent = "$previousText \n$message"
+
+                builder.setContentText(newContent)
+            }
+        }
+
         createNotificationChannel()
-        notificationManager().notify(0, builder.build())
+        notificationManager().notify(chatIdInt, builder.build())
+    }
+
+    private fun pendingIntent(resultIntent: Intent): PendingIntent?{
+        return TaskStackBuilder.create(this).run {
+            addNextIntentWithParentStack(resultIntent)
+            getPendingIntent(0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        }
     }
 
     private fun notificationManager(): NotificationManager {
         return applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    private fun createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    private fun getBitmapDrawable(context: Context): Bitmap? {
+        return AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground)
+            ?.toBitmap()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = channelName
             val description = channelDescription
             val importance = NotificationManager.IMPORTANCE_HIGH

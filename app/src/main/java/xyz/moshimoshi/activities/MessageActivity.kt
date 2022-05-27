@@ -1,5 +1,7 @@
 package xyz.moshimoshi.activities
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -36,6 +38,8 @@ class MessageActivity: BaseActivity() {
         senderId = Firebase.auth.currentUser!!.uid
         chatId = intent.getStringExtra("chatId")
         receiverId = intent.getStringExtra("receiverId")
+
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(chatId.hashCode())
 
         recyclerView = findViewById(R.id.messageRecyclerView)
         val layoutManager = LinearLayoutManager(this)
