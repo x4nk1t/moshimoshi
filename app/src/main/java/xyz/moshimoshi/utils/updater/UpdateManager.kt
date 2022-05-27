@@ -11,9 +11,7 @@ class UpdateManager(private val context: Context) {
     private val updateUrl = "https://ankit252.com.np/moshimoshi/"
     private val client = OkHttpClient()
     private val TAG = "UPDATE"
-    private val gson = GsonBuilder()
-        .setDateFormat("YYYY-MM-DD'T'HH:MM:SSZ")
-        .create()
+    private val gson = GsonBuilder().create()
 
     fun checkForUpdate(callback: (updateFound: Boolean, release: ReleaseModel) -> Unit){
         get(updateUrl, ReleaseModel::class.java){ releaseModel ->
@@ -34,7 +32,7 @@ class UpdateManager(private val context: Context) {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body
                 if (body == null) {
-                    Log.e("UPDATE", "Null response body for $url.")
+                    Log.e(TAG, "Null response body for $url.")
                     return
                 }
                 callback.invoke(gson.fromJson(body.charStream(), type))
