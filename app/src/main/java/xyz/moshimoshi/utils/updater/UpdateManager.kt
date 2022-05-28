@@ -8,7 +8,7 @@ import xyz.moshimoshi.BuildConfig
 import java.io.IOException
 
 class UpdateManager(private val context: Context) {
-    private val updateUrl = "https://ankit252.com.np/moshimoshi/"
+    private val updateUrl = "https://ankit252.com.np/moshimoshi/latest.json"
     private val client = OkHttpClient()
     private val TAG = "UPDATE"
     private val gson = GsonBuilder().create()
