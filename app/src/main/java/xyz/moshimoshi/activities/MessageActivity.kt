@@ -108,17 +108,18 @@ class MessageActivity: BaseActivity() {
     fun sendMessage(view: View){
         val database = Firebase.firestore
         val messageInputView: EditText = findViewById(R.id.messageInput)
+        val message = messageInputView.text.toString()
 
         messageInputView.text.clear()
-        if(messageInputView.text.toString() != ""){
-            val messageModel = Message(null, chatId, senderId, receiverId, messageInputView.text.toString())
+        if(message != ""){
+            val messageModel = Message(null, chatId, senderId, receiverId, message)
 
             createChatboxIfNotAvailable(receiverId!!){ _ ->
                 database.collection("messages").add(messageModel.toHash())
                     .addOnCompleteListener {
                         if (it.isSuccessful){
                             messageModel.id = it.result.id
-                            ChatFunctions.changeLastMessage(chatId!!, senderId!!, messageInputView.text.toString())
+                            ChatFunctions.changeLastMessage(chatId!!, senderId!!, message)
                         }
                     }
             }
