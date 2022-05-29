@@ -109,6 +109,7 @@ class MessageActivity: BaseActivity() {
         val database = Firebase.firestore
         val messageInputView: EditText = findViewById(R.id.messageInput)
 
+        messageInputView.text.clear()
         if(messageInputView.text.toString() != ""){
             val messageModel = Message(null, chatId, senderId, receiverId, messageInputView.text.toString())
 
@@ -118,7 +119,6 @@ class MessageActivity: BaseActivity() {
                         if (it.isSuccessful){
                             messageModel.id = it.result.id
                             changeLastMessage(messageInputView.text.toString())
-                            messageInputView.text.clear()
                         }
                     }
             }
