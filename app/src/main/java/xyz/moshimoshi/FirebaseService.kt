@@ -7,18 +7,20 @@ import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
+import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.toBitmap
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import xyz.moshimoshi.activities.MessageActivity
 import xyz.moshimoshi.utils.ChatFunctions
+import xyz.moshimoshi.utils.NotificationReceiver
 
 private const val channelId = "notification_channel"
 private const val channelName = "Receive Messages"
 private const val channelDescription = "Shows notifications whenever work starts"
 
 class FirebaseService: FirebaseMessagingService() {
+    private val resultKey = "reply_message_key"
+
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
@@ -37,13 +39,17 @@ class FirebaseService: FirebaseMessagingService() {
     }
 
     private fun generateNotification(chatId: String, senderId: String, senderUsername: String, message: String){
-        val resultIntent = Intent(this, MessageActivity::class.java)
+        val resultIntent = Intent(this, NotificationReceiver::class.java)
         resultIntent.putExtra("chatId", chatId)
         resultIntent.putExtra("receiverId", senderId)
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val chatIdInt = chatId.hashCode()
-        val pendingIntent: PendingIntent? = pendingIntent(resultIntent)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, resultIntent, PendingIntent.FLAG_MUTABLE)
+
+        val remoteInput = RemoteInput.Builder(resultKey).build()
+        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground, "Reply", pendingIntent)
+            .addRemoteInput(remoteInput).build()
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -52,6 +58,8 @@ class FirebaseService: FirebaseMessagingService() {
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
             .setContentTitle(senderUsername)
+            .setContentText(message)
+            .addAction(replyAction)
 
         notificationManager().activeNotifications.forEach { statusBarNotification ->
             if(statusBarNotification.id == chatId.hashCode()){
@@ -66,14 +74,6 @@ class FirebaseService: FirebaseMessagingService() {
 
         createNotificationChannel()
         notificationManager().notify(chatIdInt, builder.build())
-    }
-
-    private fun pendingIntent(resultIntent: Intent): PendingIntent?{
-        return TaskStackBuilder.create(this).run {
-            addNextIntentWithParentStack(resultIntent)
-            getPendingIntent(0,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        }
     }
 
     private fun notificationManager(): NotificationManager {

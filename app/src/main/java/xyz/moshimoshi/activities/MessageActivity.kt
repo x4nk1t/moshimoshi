@@ -18,10 +18,10 @@ import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
 import xyz.moshimoshi.adapters.MessageAdapter
 import xyz.moshimoshi.models.Message
+import xyz.moshimoshi.utils.ChatFunctions
 import xyz.moshimoshi.utils.ChatFunctions.Companion.createChatBox
 import xyz.moshimoshi.utils.ChatFunctions.Companion.getUsernameFromId
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class MessageActivity: BaseActivity() {
     private var chatId: String? = null
@@ -118,22 +118,11 @@ class MessageActivity: BaseActivity() {
                     .addOnCompleteListener {
                         if (it.isSuccessful){
                             messageModel.id = it.result.id
-                            changeLastMessage(messageInputView.text.toString())
+                            ChatFunctions.changeLastMessage(chatId!!, senderId!!, messageInputView.text.toString())
                         }
                     }
             }
         }
-    }
-
-    private fun changeLastMessage(message: String){
-        val database = Firebase.firestore
-        val hashMap = HashMap<String, Any>()
-        hashMap["active"] = true
-        hashMap["lastMessage"] = message
-        hashMap["lastMessageBy"] = senderId!!
-        hashMap["lastMessageTimestamp"] = System.currentTimeMillis()
-
-        database.collection("chats").document(chatId!!).set(hashMap)
     }
 
     private fun createChatboxIfNotAvailable(userId: String, callback: (found: Boolean) -> Unit){

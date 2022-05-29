@@ -190,5 +190,17 @@ class ChatFunctions {
             intent.putExtra("receiverId", receiverId)
             activity.startActivity(intent)
         }
+
+        fun changeLastMessage(chatId: String, senderId: String, message: String){
+            val database = Firebase.firestore
+            val hashMap = HashMap<String, Any>()
+            hashMap["active"] = true
+            hashMap["lastMessage"] = message
+            hashMap["lastMessageBy"] = senderId
+            hashMap["lastMessageTimestamp"] = System.currentTimeMillis()
+
+            database.collection("chats").document(chatId).set(hashMap)
+        }
+
     }
 }
