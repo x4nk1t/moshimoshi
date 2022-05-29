@@ -1,8 +1,6 @@
 package xyz.moshimoshi
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -38,7 +36,7 @@ class FirebaseService: FirebaseMessagingService() {
         }
     }
 
-    private fun generateNotification(chatId: String, senderId: String, title: String, message: String){
+    private fun generateNotification(chatId: String, senderId: String, senderUsername: String, message: String){
         val resultIntent = Intent(this, MessageActivity::class.java)
         resultIntent.putExtra("chatId", chatId)
         resultIntent.putExtra("receiverId", senderId)
@@ -49,11 +47,11 @@ class FirebaseService: FirebaseMessagingService() {
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setLargeIcon((getBitmapDrawable(this)))
+            .setLargeIcon((getBitmapDrawable()))
             .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
-            .setContentTitle(title)
-            .setContentText(message)
+            .setContentTitle(senderUsername)
 
         notificationManager().activeNotifications.forEach { statusBarNotification ->
             if(statusBarNotification.id == chatId.hashCode()){
@@ -82,8 +80,8 @@ class FirebaseService: FirebaseMessagingService() {
         return applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    private fun getBitmapDrawable(context: Context): Bitmap? {
-        return AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground)
+    private fun getBitmapDrawable(): Bitmap? {
+        return AppCompatResources.getDrawable(this, R.drawable.ic_launcher_foreground)
             ?.toBitmap()
     }
 
