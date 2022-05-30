@@ -3,6 +3,7 @@ package xyz.moshimoshi
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.content.res.AppCompatResources
@@ -20,6 +21,7 @@ private const val channelDescription = "Shows notifications whenever work starts
 
 class FirebaseService: FirebaseMessagingService() {
     private val resultKey = "reply_message_key"
+    private val prefName = "xyz.moshimoshi.chatState"
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -33,8 +35,12 @@ class FirebaseService: FirebaseMessagingService() {
         val senderId = data["senderId"]!!
         val chatId = data["chatId"]!!
 
-        ChatFunctions.getUsernameFromId(senderId){ senderUsername ->
-            generateNotification(chatId, senderId, senderUsername, receivedMessage)
+        val currentForeground = sharedPreferences().getString("currentForeground", "")!!
+
+        if(currentForeground != chatId && currentForeground != "main") {
+            ChatFunctions.getUsernameFromId(senderId) { senderUsername ->
+                generateNotification(chatId, senderId, senderUsername, receivedMessage)
+            }
         }
     }
 
@@ -78,6 +84,10 @@ class FirebaseService: FirebaseMessagingService() {
 
     private fun notificationManager(): NotificationManager {
         return applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
+    private fun sharedPreferences(): SharedPreferences{
+        return getSharedPreferences(prefName, Context.MODE_PRIVATE)
     }
 
     private fun getBitmapDrawable(): Bitmap? {

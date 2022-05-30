@@ -1,6 +1,8 @@
 package xyz.moshimoshi.fragments
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -16,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
 import xyz.moshimoshi.R
 import xyz.moshimoshi.activities.NewMessageActivity
 import xyz.moshimoshi.adapters.ChatListAdapter
@@ -26,6 +27,8 @@ class HomeFragment: Fragment() {
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: ChatListAdapter
     private var chatLists: ArrayList<ChatList> = ArrayList()
+    private val prefName = "xyz.moshimoshi.chatState"
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +36,8 @@ class HomeFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view =  inflater.inflate(R.layout.fragment_home, container, false)
+
+        sharedPreferences = requireContext().getSharedPreferences(prefName, Context.MODE_PRIVATE)
 
         val recyclerView: RecyclerView? = view?.findViewById(R.id.chatListRecyclerView)
         val layoutManager = LinearLayoutManager(context)
@@ -52,6 +57,26 @@ class HomeFragment: Fragment() {
         loadMessages()
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setForeground(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        setForeground(false)
+    }
+
+    private fun setForeground(set: Boolean){
+        val editor = sharedPreferences.edit()
+        if(set) {
+            editor.putString("currentForeground", "main")
+        } else {
+            editor.putString("currentForeground", "")
+        }
+        editor.apply()
     }
 
     private fun registerMessageListener(){

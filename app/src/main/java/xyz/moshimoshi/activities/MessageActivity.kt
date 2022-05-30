@@ -3,6 +3,7 @@ package xyz.moshimoshi.activities
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -30,11 +31,14 @@ class MessageActivity: BaseActivity() {
     private var allMessages: ArrayList<Message> = ArrayList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MessageAdapter
+    private val prefName = "xyz.moshimoshi.chatState"
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
         initToolbar(R.id.messageToolbar)
+        sharedPreferences = getSharedPreferences(prefName, Context.MODE_PRIVATE)
 
         senderId = Firebase.auth.currentUser!!.uid
         chatId = intent.getStringExtra("chatId")
@@ -74,6 +78,26 @@ class MessageActivity: BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        setForeground(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        setForeground(false)
+    }
+
+    private fun setForeground(set: Boolean){
+        val editor = sharedPreferences.edit()
+        if(set) {
+            editor.putString("currentForeground", chatId)
+        } else {
+            editor.putString("currentForeground", "")
+        }
+        editor.apply()
+    }
+
     private fun registerMessageListener(){
         val database = Firebase.firestore
         database.collection("messages").whereEqualTo("chats_id", chatId)
@@ -109,6 +133,7 @@ class MessageActivity: BaseActivity() {
         val database = Firebase.firestore
         val messageInputView: EditText = findViewById(R.id.messageInput)
         val message = messageInputView.text.toString()
+
 
         messageInputView.text.clear()
         if(message != ""){
