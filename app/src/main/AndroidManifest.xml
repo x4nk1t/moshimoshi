@@ -19,6 +19,7 @@
         <activity android:name="xyz.moshimoshi.activities.BaseActivity" />
         <activity android:name="xyz.moshimoshi.activities.NewMessageActivity" />
         <activity android:name="xyz.moshimoshi.activities.MessageActivity" />
+        <activity android:name="xyz.moshimoshi.activities.ResetPasswordActivity" />
         <activity
             android:name="xyz.moshimoshi.activities.SplashActivity"
             android:exported="true">

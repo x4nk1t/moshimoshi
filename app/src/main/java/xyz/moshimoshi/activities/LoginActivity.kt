@@ -3,6 +3,7 @@ package xyz.moshimoshi.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +15,19 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val passwordInput: EditText = findViewById(R.id.input_password)
+        passwordInput.setOnEditorActionListener { _, actionCode, _ ->
+            if(actionCode == EditorInfo.IME_ACTION_SEND){
+                loginPressed(findViewById(R.id.loginConstraintLayout))
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+    }
+
+    fun startResetPasswordActivity(view: View){
+        startActivity(Intent(this, ResetPasswordActivity::class.java))
     }
 
     fun loginPressed(view: View){
