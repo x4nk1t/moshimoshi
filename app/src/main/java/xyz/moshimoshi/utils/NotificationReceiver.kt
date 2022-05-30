@@ -29,13 +29,6 @@ class NotificationReceiver: BroadcastReceiver(){
                     notificationManager(context!!.applicationContext).cancel(chatId.hashCode())
                 }
             }
-        } else {
-            val chatboxIntent = Intent(context, MessageActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            chatboxIntent.putExtra("chatId", chatId)
-            chatboxIntent.putExtra("receiverId", receiverId)
-            context!!.applicationContext.startActivity(chatboxIntent)
         }
     }
 

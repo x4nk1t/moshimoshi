@@ -12,12 +12,13 @@ import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.toBitmap
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import xyz.moshimoshi.activities.MessageActivity
 import xyz.moshimoshi.utils.ChatFunctions
 import xyz.moshimoshi.utils.NotificationReceiver
 
 private const val channelId = "notification_channel"
 private const val channelName = "Receive Messages"
-private const val channelDescription = "Shows notifications whenever work starts"
+private const val channelDescription = "Shows notifications when new message is received"
 
 class FirebaseService: FirebaseMessagingService() {
     private val resultKey = "reply_message_key"
@@ -45,16 +46,22 @@ class FirebaseService: FirebaseMessagingService() {
     }
 
     private fun generateNotification(chatId: String, senderId: String, senderUsername: String, message: String){
-        val resultIntent = Intent(this, NotificationReceiver::class.java)
+        val replyIntent = Intent(this, NotificationReceiver::class.java)
+        replyIntent.putExtra("chatId", chatId)
+        replyIntent.putExtra("receiverId", senderId)
+        replyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val resultIntent = Intent(this, MessageActivity::class.java)
         resultIntent.putExtra("chatId", chatId)
         resultIntent.putExtra("receiverId", senderId)
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val chatIdInt = chatId.hashCode()
-        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, resultIntent, PendingIntent.FLAG_MUTABLE)
+        val pendingIntent: PendingIntent? = pendingIntent(resultIntent)
+        val replyPendingIntent: PendingIntent = PendingIntent.getBroadcast(applicationContext, chatIdInt, replyIntent, PendingIntent.FLAG_MUTABLE)
 
         val remoteInput = RemoteInput.Builder(resultKey).build()
-        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground, "Reply", pendingIntent)
+        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground, "Reply", replyPendingIntent)
             .addRemoteInput(remoteInput).build()
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
@@ -80,6 +87,14 @@ class FirebaseService: FirebaseMessagingService() {
 
         createNotificationChannel()
         notificationManager().notify(chatIdInt, builder.build())
+    }
+
+    private fun pendingIntent(resultIntent: Intent): PendingIntent?{
+        return TaskStackBuilder.create(this).run {
+            addNextIntentWithParentStack(resultIntent)
+            getPendingIntent(0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        }
     }
 
     private fun notificationManager(): NotificationManager {
