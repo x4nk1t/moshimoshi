@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "601620146676",
+    "project_id": "moshi-debug",
+    "storage_bucket": "moshi-debug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601620146676:android:3938f1382085342b8831a1",
+        "android_client_info": {
+          "package_name": "xyz.moshimoshi.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "788475928809-drjehhq1havm8skhaqs09d94mf5uk93f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgtW51xVgjlsbk7_tmhVHGeAG2tjTHf0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "788475928809-drjehhq1havm8skhaqs09d94mf5uk93f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

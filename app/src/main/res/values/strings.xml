@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">MoshiMoshi</string>
     <string name="home_nav">Home</string>
     <string name="login">Login!</string>
     <string name="email">Email</string>
