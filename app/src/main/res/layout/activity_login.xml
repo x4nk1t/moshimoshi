@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:labelFor="@+id/input_email"
             android:text="@string/email"
-            android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/login_status" />
@@ -46,7 +45,6 @@
             android:autofillHints="emailAddress"
             android:ems="10"
             android:inputType="textEmailAddress"
-            android:onClick="resetPassword"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emailInputLabel" />
@@ -57,7 +55,6 @@
             android:layout_height="wrap_content"
             android:labelFor="@+id/input_password"
             android:text="@string/password"
-            android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/input_email" />
@@ -82,7 +79,7 @@
             android:layout_height="wrap_content"
             android:onClick="loginPressed"
             android:text="@string/login"
-            android:textColor="@color/black"
+            android:background="@color/colorPrimary"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/input_password"/>
@@ -90,7 +87,6 @@
         <TextView
             android:text="@string/forgot_password"
             android:textSize="12sp"
-            android:textColor="@color/purple_500"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

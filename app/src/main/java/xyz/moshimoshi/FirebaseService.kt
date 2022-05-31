@@ -61,11 +61,11 @@ class FirebaseService: FirebaseMessagingService() {
         val replyPendingIntent: PendingIntent = PendingIntent.getBroadcast(applicationContext, chatIdInt, replyIntent, PendingIntent.FLAG_MUTABLE)
 
         val remoteInput = RemoteInput.Builder(resultKey).build()
-        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground, "Reply", replyPendingIntent)
+        val replyAction = NotificationCompat.Action.Builder(R.mipmap.ic_launcher_round, "Reply", replyPendingIntent)
             .addRemoteInput(remoteInput).build()
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .setLargeIcon((getBitmapDrawable()))
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
@@ -106,7 +106,7 @@ class FirebaseService: FirebaseMessagingService() {
     }
 
     private fun getBitmapDrawable(): Bitmap? {
-        return AppCompatResources.getDrawable(this, R.drawable.ic_launcher_foreground)
+        return AppCompatResources.getDrawable(this, R.mipmap.ic_launcher_round)
             ?.toBitmap()
     }
 

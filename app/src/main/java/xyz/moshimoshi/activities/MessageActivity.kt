@@ -31,14 +31,11 @@ class MessageActivity: BaseActivity() {
     private var allMessages: ArrayList<Message> = ArrayList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MessageAdapter
-    private val prefName = "xyz.moshimoshi.chatState"
-    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
         initToolbar(R.id.messageToolbar)
-        sharedPreferences = getSharedPreferences(prefName, Context.MODE_PRIVATE)
 
         senderId = Firebase.auth.currentUser!!.uid
         chatId = intent.getStringExtra("chatId")
@@ -80,22 +77,12 @@ class MessageActivity: BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        setForeground(true)
+        setForeground(chatId!!)
     }
 
     override fun onPause() {
         super.onPause()
-        setForeground(false)
-    }
-
-    private fun setForeground(set: Boolean){
-        val editor = sharedPreferences.edit()
-        if(set) {
-            editor.putString("currentForeground", chatId)
-        } else {
-            editor.putString("currentForeground", "")
-        }
-        editor.apply()
+        setForeground("")
     }
 
     private fun registerMessageListener(){

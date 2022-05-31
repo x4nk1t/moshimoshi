@@ -19,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import xyz.moshimoshi.R
+import xyz.moshimoshi.activities.MainActivity
 import xyz.moshimoshi.activities.NewMessageActivity
 import xyz.moshimoshi.adapters.ChatListAdapter
 import xyz.moshimoshi.models.ChatList
@@ -61,22 +62,12 @@ class HomeFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        setForeground(true)
+        (activity as MainActivity).setForeground("main")
     }
 
     override fun onPause() {
         super.onPause()
-        setForeground(false)
-    }
-
-    private fun setForeground(set: Boolean){
-        val editor = sharedPreferences.edit()
-        if(set) {
-            editor.putString("currentForeground", "main")
-        } else {
-            editor.putString("currentForeground", "")
-        }
-        editor.apply()
+        (activity as MainActivity).setForeground("")
     }
 
     private fun registerMessageListener(){

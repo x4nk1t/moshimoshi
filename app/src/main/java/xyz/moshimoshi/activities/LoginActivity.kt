@@ -16,6 +16,8 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        window.statusBarColor = getColor(R.color.colorSecondary)
+
         val passwordInput: EditText = findViewById(R.id.input_password)
         passwordInput.setOnEditorActionListener { _, actionCode, _ ->
             if(actionCode == EditorInfo.IME_ACTION_SEND){
@@ -39,12 +41,10 @@ class LoginActivity : BaseActivity() {
         val loginStatus: TextView = findViewById(R.id.login_status)
 
         if(email == "" || password == ""){
-            loginStatus.setTextColor(getColor(R.color.red))
             loginStatus.text = getString(R.string.enter_both)
             return
         }
 
-        loginStatus.setTextColor(getColor(R.color.black))
         loginStatus.text = getString(R.string.logging_in)
 
         authenticateUser(email, password)
@@ -65,7 +65,6 @@ class LoginActivity : BaseActivity() {
                     val loginStatus: TextView = findViewById(R.id.login_status)
 
                     loginStatus.text = getString(R.string.user_not_found)
-                    loginStatus.setTextColor(getColor(R.color.red))
                 }
             }
     }

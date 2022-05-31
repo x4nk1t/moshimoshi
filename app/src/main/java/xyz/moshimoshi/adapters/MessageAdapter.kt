@@ -74,7 +74,7 @@ class MessageAdapter(val context: Context, private val messages: ArrayList<Messa
                 val start = message.indexOf(mess)
                 val end = start + mess.length
                 spannable.setSpan(clickable, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                spannable.setSpan(ForegroundColorSpan(Color.BLUE), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(ForegroundColorSpan(context.getColor(R.color.linkColor)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
 
