@@ -18,7 +18,7 @@ class UpdateDialogue(private val releaseData: ReleaseModel): DialogFragment() {
 
             builder.setMessage("New update found! Update now?")
                 .setPositiveButton("Download",
-                    DialogInterface.OnClickListener { dialog, id ->
+                    DialogInterface.OnClickListener { _, _ ->
                         val downloadUrl = releaseData.apkUrl
                         val apkName = "${releaseData.apkName}"
 
@@ -29,10 +29,10 @@ class UpdateDialogue(private val releaseData: ReleaseModel): DialogFragment() {
                                 .setTitle(apkName)
                                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                         )
-                        Toast.makeText(requireContext(),"Install the apk from the download folder!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(),"Install the apk from the notification or download folder!", Toast.LENGTH_SHORT).show()
                     })
                 .setNegativeButton("Later",
-                    DialogInterface.OnClickListener { dialog, id ->
+                    DialogInterface.OnClickListener { _, _ ->
                         return@OnClickListener
                     })
             builder.create()
