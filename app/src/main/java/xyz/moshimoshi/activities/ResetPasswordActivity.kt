@@ -13,6 +13,7 @@ class ResetPasswordActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_password)
+        window.statusBarColor = getColor(R.color.colorSecondary)
 
         val emailInput: EditText = findViewById(R.id.resetEmailInput)
         emailInput.setOnEditorActionListener { _, actionCode, _ ->
